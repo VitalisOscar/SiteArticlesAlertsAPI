@@ -7,4 +7,5 @@ return [
 
     // Success
     'post_created' => 'The post has been created successfully',
+    'subscription_successful' => 'User has been subscribed to the website successfully',
 ];
