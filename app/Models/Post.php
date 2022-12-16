@@ -19,10 +19,14 @@ class Post extends Model
 
     public $timestamps = true;
 
+    const STATUS_NEW = 'New'; // New post, yet to be sent to subscribers
+    const STATUS_Sent = 'Sent'; // Already sent to subscribers
+
     protected $fillable = [
         'title',
         'description',
-        'site_id'
+        'site_id',
+        'status'
     ];
 
 

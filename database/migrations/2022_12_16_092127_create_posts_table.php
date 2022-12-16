@@ -18,6 +18,7 @@ class CreatePostsTable extends Migration
             $table->string('title');
             $table->text('description');
             $table->foreignId('site_id')->constrained('sites')->cascadeOnDelete();
+            $table->string('status')->index();
             $table->timestamps();
         });
     }

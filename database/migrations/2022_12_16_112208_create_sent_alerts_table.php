@@ -15,7 +15,7 @@ class CreateSentAlertsTable extends Migration
     {
         Schema::create('sent_alerts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('subscription_id')->constrained('subscriptions')->cascadeOnDelete();
+            $table->foreignId('subscriber_id')->constrained('subscribers')->cascadeOnDelete();
             $table->foreignId('post_id')->constrained('posts')->cascadeOnDelete();
             $table->timestamps();
         });

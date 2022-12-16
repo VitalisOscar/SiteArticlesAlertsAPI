@@ -21,7 +21,7 @@ class SentAlert extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'subscription_id', // Subscription that made the post be sent
+        'subscriber_id', // Subscriber that received the post
         'post_id', // Post that was sent
     ];
 

@@ -37,7 +37,7 @@ class Subscriber extends Model
     /**
      * The posts that the subscriber has been sent
      */
-    public function posts(){
+    public function received_posts(){
         return $this->belongsToMany(Post::class, 'sent_alerts');
     }
 
