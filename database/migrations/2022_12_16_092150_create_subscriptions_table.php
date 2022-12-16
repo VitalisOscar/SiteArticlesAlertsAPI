@@ -15,6 +15,9 @@ class CreateSubscriptionsTable extends Migration
     {
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('subscriber_id')->constrained('subscribers')->cascadeOnDelete();
+            $table->foreignId('site_id')->constrained('sites')->cascadeOnDelete();
+            $table->string('status')->index();
             $table->timestamps();
         });
     }

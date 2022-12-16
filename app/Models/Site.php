@@ -5,6 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/*
+|-----------------------------------------------------------
+| Site
+|-----------------------------------------------------------
+|
+| A site is a website that may publish one or several posts
+|
+*/
 class Site extends Model
 {
     use HasFactory;
