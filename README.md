@@ -59,7 +59,7 @@ To create a new article for a particular site, the following is the request info
 ```
 
 **Sample Responses**
-Successful post creation
+<br>Successful post creation
 ```
 {
     success: true,
@@ -94,7 +94,7 @@ To subscribe a user to get alerts from a site once an article is published, send
 ```
 
 **Sample Responses**
-Successful subscription
+<br>Successful subscription
 ```
 {
     success: true,
@@ -118,5 +118,5 @@ Open a separate tab and run the command:<br>**`php artisan posts:send_alerts`**
 
 If there are new posts for any site in the database, they will be sent to every subscriber via the running queue
 
-**NB:** You can also schedule the command to run periodically e.g every half an hour
+**PS:** You can also schedule the command to run periodically in your `App\Console\Kernel` e.g every half an hour if you are using a scheduler
 
