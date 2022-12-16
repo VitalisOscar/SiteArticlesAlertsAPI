@@ -33,6 +33,7 @@ class PostsController extends Controller
                 'title' => $request->post('title'),
                 'description' => $request->post('description'),
                 'site_id' => $request->post('site_id'),
+                'status' => Post::STATUS_NEW
             ]);
 
             if($post->save()){

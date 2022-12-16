@@ -20,7 +20,7 @@ class Post extends Model
     public $timestamps = true;
 
     const STATUS_NEW = 'New'; // New post, yet to be sent to subscribers
-    const STATUS_Sent = 'Sent'; // Already sent to subscribers
+    const STATUS_SENT = 'Sent'; // Already sent to subscribers
 
     protected $fillable = [
         'title',
@@ -44,5 +44,14 @@ class Post extends Model
      */
     public function subscribers(){
         return $this->belongsToMany(Subscriber::class, 'sent_alerts');
+    }
+
+
+    // SCOPES
+    /**
+     * Scope a query to only include new posts
+     */
+    public function scopeNewlyPublished($query){
+        return $query->where('status', self::STATUS_NEW);
     }
 }

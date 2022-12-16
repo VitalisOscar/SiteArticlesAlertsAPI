@@ -41,4 +41,16 @@ class Subscriber extends Model
         return $this->belongsToMany(Post::class, 'sent_alerts');
     }
 
+
+    // HELPERS
+
+    /**
+     * Check if the subscriber has ever received a particular post to his/her inbox
+     */
+    public function alreadyReceivedPost(Post $post){
+        return $this->received_posts()
+            ->where('post_id', $post->id)
+            ->exists();
+    }
+
 }
