@@ -15,8 +15,7 @@ DB_DATABASE=<NAME OF THE DATABASE YOU CREATED>
 DB_USERNAME=root
 DB_PASSWORD=
 ```
-Create the database tables by running the command:
-  **php artisan migrate --seed**
+Create the database tables by running the command:<br>**`php artisan migrate --seed`**
   The command will also seed some 3 example sites in the database
 
 #### Email setup
@@ -34,11 +33,9 @@ MAIL_FROM_ADDRESS=<MAILTRAP EMAIL>
 ## Running the application
 After you have set up everything you can now run the application.
 
-First, start the queue by running the command:
-**php artisan queue:work**
+First, start the queue by running the command:<br>**`php artisan queue:work`**
 
-Open a new terminal window or tab and start the server as well using the command:
-**php artisan serve**
+Open a new terminal window or tab and start the server as well using the command:<br>**`php artisan serve`**
 
 ## API
 Each api request has a common response with the following pieces of data:
@@ -46,13 +43,13 @@ Each api request has a common response with the following pieces of data:
 - **`message`** - A status message corresponding to the result of the request
 - **`data`** - Mixed data, if any, sent by the API back to the client
 - **`errors`** - An array of validation errors detected in the data that was sent
+  
+You can send requests from your frontend or test via postman
 
 ### Creating an article
 To create a new article for a particular site, the following is the request information
 
-**Endpoint:** /api/posts/create
-**Method:** POST
-**Body:**
+**Endpoint:** /api/posts/create<br> **Method:** POST<br> **Body:**
 ```
 {
     site_id: 1,
@@ -88,9 +85,7 @@ Validation errors present
 ### Subscribing to a site
 To subscribe a user to get alerts from a site once an article is published, send the site_id and subscriber's email as shown in the example:
 
-**Endpoint:** /api/subscriptions/new
-**Method:** POST
-**Body:**
+**Endpoint:** /api/subscriptions/new <br>**Method:** POST <br> **Body:**
 ```
 {
     site_id: 1,
@@ -117,11 +112,9 @@ User was already subscribed to the site
 
 ## Sending Emails to Subscribers
 To send emails to subscribers,
-- Ensure the queue is running. If you did not start it, do so by running the command:
-**php artisan queue:work**
+- Ensure the queue is running. If you did not start it, do so by running the command:<br>**`php artisan queue:work`**
 
-Open a separate tab and run the command:
-**php artisan posts:send_alerts**
+Open a separate tab and run the command:<br>**`php artisan posts:send_alerts`**
 
 If there are new posts for any site in the database, they will be sent to every subscriber via the running queue
 
