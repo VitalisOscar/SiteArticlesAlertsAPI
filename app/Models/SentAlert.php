@@ -18,7 +18,7 @@ class SentAlert extends Model
 {
     use HasFactory;
 
-    protected $timestamps = true;
+    public $timestamps = true;
 
     protected $fillable = [
         'subscription_id', // Subscription that made the post be sent

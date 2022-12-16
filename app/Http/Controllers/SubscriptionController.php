@@ -16,7 +16,7 @@ class SubscriptionController extends Controller
         try{
             // Validate request
             $validator = validator($request->post(), [
-                'site' => 'required|exists:sites,id',
+                'site_id' => 'required|exists:sites,id',
                 'email' => 'required|email'
             ]);
 
@@ -29,20 +29,47 @@ class SubscriptionController extends Controller
             DB::beginTransaction();
 
 
-            // Check if the email is already saved
-            $subscriber = Subscriber::findOrCreate([
+            // If email had been submitted before for subscription to any site,
+            // there will be an existing record
+            // Otherwise, we'll create it
+            $subscriber = Subscriber::firstOrCreate([
                 'email' => $request->post('email')
             ]);
 
 
             // Get the site being subscribed to
-            $site = Site::whereId($request->post('site'))->first();
+            $site = Site::whereId($request->post('site_id'))->first();
 
-            // Create an active subscription for the subscriber for the site
-            $subscription = $site->subscribers()->attach($subscriber, [
-                'status' => Subscription::STATUS_ACTIVE
-            ]);
 
+            // Get any existing record for the subscription to the site by the subscriber
+            $existing_subscriber = $site->subscribers()
+                ->where('subscribers.id', $subscriber->id)
+                ->first();
+
+            
+            if(!$existing_subscriber){
+                // This is a first subscription to that particular site
+                // Create an active subscription record for the subscriber for the site
+                $site->subscribers()->attach($subscriber, [
+                    'status' => Subscription::STATUS_ACTIVE
+                ]);
+            }else{
+                // User has subscribed to that particular site before
+                // The subscription will either be active or not
+
+                // Check if the subscription is active
+                if($existing_subscriber->pivot->status == Subscription::STATUS_ACTIVE){
+                    // Nothing we can do
+                    return $this->json(false, Lang::get('app.already_subscribed'));
+                }else{
+                    // Reactivate the subscription
+                    $site->subscribers()->updateExistingPivot($subscriber->id, [
+                        'status' => Subscription::STATUS_ACTIVE
+                    ]);
+                }
+            }
+
+            // Done
             DB::commit();
 
             return $this->json(true, Lang::get('app.subscription_successful'));

@@ -14,20 +14,25 @@ class PostsController extends Controller
         try{
             // Validate request
             $validator = validator($request->post(), [
-                'site' => 'required|exists:sites,id',
+                'site_id' => 'required|exists:sites,id',
                 'title' => 'required|string',
                 'description' => 'required|string',
             ]);
 
             if($validator->fails()){
-                return $this->json(false, null, $validator->errors()->all());
+                return $this->json(
+                    false,
+                    Lang::get('app.validation_errors'),
+                    null,
+                    $validator->errors()->all()
+                );
             }
 
             // Now create the post
             $post = new Post([
                 'title' => $request->post('title'),
                 'description' => $request->post('description'),
-                'site_id' => $request->post('site'),
+                'site_id' => $request->post('site_id'),
             ]);
 
             if($post->save()){

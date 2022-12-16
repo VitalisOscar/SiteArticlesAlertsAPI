@@ -17,7 +17,7 @@ class Site extends Model
 {
     use HasFactory;
 
-    protected $timestamps = true;
+    public $timestamps = true;
 
     protected $fillable = [
         'name',
@@ -38,7 +38,7 @@ class Site extends Model
      * The subscribers that are subscribed to the site
      */
     public function subscribers(){
-        return $this->belongsToMany(Subscriber::class, 'subscriptions');
+        return $this->belongsToMany(Subscriber::class, 'subscriptions')->withPivot('status');
     }
 
 }

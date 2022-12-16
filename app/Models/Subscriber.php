@@ -31,7 +31,7 @@ class Subscriber extends Model
      * The sites that the subscriber is subscribed to
      */
     public function sites(){
-        return $this->belongsToMany(Site::class, 'subscriptions');
+        return $this->belongsToMany(Site::class, 'subscriptions')->withPivot('status');
     }
 
     /**
