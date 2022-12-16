@@ -1,64 +1,129 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+This application allows users to subscribe to receive new articles from sites
+Articles are sent once via the provided email
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+### Set up
+- Create a copy of `.env.example` and save it as `.env`
+- Create an application key by running the command `php artisan key:generate`
 
-## About Laravel
+#### Database setup
+Create a database to use in storing the application data
+Open the `.env` file and update the following lines in the `DB` section with your environment specific settings
+```
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=<NAME OF THE DATABASE YOU CREATED>
+DB_USERNAME=root
+DB_PASSWORD=
+```
+Create the database tables by running the command:
+  **php artisan migrate --seed**
+  The command will also seed some 3 example sites in the database
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+#### Email setup
+To ensure emails will be sent without any problem, update the `MAIL` section of the `.env` with specific settings of your preferred mail sender. I used mailtrap for instance:
+```
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=<MAILTRAP USERNAME>
+MAIL_PASSWORD=<MAILTRAP PASSWORD>
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=<MAILTRAP EMAIL>
+```
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Running the application
+After you have set up everything you can now run the application.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+First, start the queue by running the command:
+**php artisan queue:work**
 
-## Learning Laravel
+Open a new terminal window or tab and start the server as well using the command:
+**php artisan serve**
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## API
+Each api request has a common response with the following pieces of data:
+- **`success`** - A true/false value that indicates whether the request being attempted succeeded 100%.
+- **`message`** - A status message corresponding to the result of the request
+- **`data`** - Mixed data, if any, sent by the API back to the client
+- **`errors`** - An array of validation errors detected in the data that was sent
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Creating an article
+To create a new article for a particular site, the following is the request information
 
-## Laravel Sponsors
+**Endpoint:** /api/posts/create
+**Method:** POST
+**Body:**
+```
+{
+    site_id: 1,
+    title: "Meta Platform's stock takes a nose dive",
+    description: "Investors are worried about Meta's future......"
+}
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+**Sample Responses**
+Successful post creation
+```
+{
+    success: true,
+    message: "The post has been created successfully",
+    data: {
+        // Post data
+    }
+}
+```
 
-### Premium Partners
+Validation errors present
+```
+{
+    success: false,
+    message: "Data validation errors detected. Fix the errors and try again",
+    errors: [
+        "The selected site id is invalid.",
+        "The title field is required."
+    ]
+}
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+### Subscribing to a site
+To subscribe a user to get alerts from a site once an article is published, send the site_id and subscriber's email as shown in the example:
 
-## Contributing
+**Endpoint:** /api/subscriptions/new
+**Method:** POST
+**Body:**
+```
+{
+    site_id: 1,
+    email: "john@example.com"
+}
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+**Sample Responses**
+Successful subscription
+```
+{
+    success: true,
+    message: "User has been subscribed to the website successfully"
+}
+```
 
-## Code of Conduct
+User was already subscribed to the site
+```
+{
+    success: false,
+    message: "User is already subscribed to the website"
+}
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Sending Emails to Subscribers
+To send emails to subscribers,
+- Ensure the queue is running. If you did not start it, do so by running the command:
+**php artisan queue:work**
 
-## Security Vulnerabilities
+Open a separate tab and run the command:
+**php artisan posts:send_alerts**
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+If there are new posts for any site in the database, they will be sent to every subscriber via the running queue
 
-## License
+**NB:** You can also schedule the command to run periodically e.g every half an hour
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
