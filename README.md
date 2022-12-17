@@ -3,6 +3,7 @@ Articles are sent once via the provided email
 
 ### Set up
 - Create a copy of `.env.example` and save it as `.env`
+- Run the command `composer install` to install dependencies
 - Create an application key by running the command `php artisan key:generate`
 
 #### Database setup
