@@ -21,7 +21,7 @@ class SubscriptionController extends Controller
             ]);
 
             if($validator->fails()){
-                return $this->json(false, null, $validator->errors()->all());
+                return $this->json(false, Lang::get('app.validation_errors'), null, $validator->errors()->all());
             }
 
 
@@ -46,7 +46,7 @@ class SubscriptionController extends Controller
                 ->where('subscribers.id', $subscriber->id)
                 ->first();
 
-            
+
             if(!$existing_subscriber){
                 // This is a first subscription to that particular site
                 // Create an active subscription record for the subscriber for the site
